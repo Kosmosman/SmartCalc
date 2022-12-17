@@ -10,8 +10,9 @@
 
 #define DIGITS "0123456789"
 // Заменим mod символом '%'. В калькуляторе будет иметь прежний вид
-#define OPERATORS "+-*/%%^"
-#define BRACKET "()"
+#define OPERATORS "(+-*/%%^"
+#define OPEN_BRACKET "("
+#define CLOSE_BRACKET ")"
 #define FUNCTIONS "acos asin atan sqrt log  cos  sin  tan ln"
 
 #include <ctype.h>
