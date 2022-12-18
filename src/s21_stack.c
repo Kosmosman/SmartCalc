@@ -59,7 +59,8 @@ int s21_pop(stack** head, void** ret) {
     } else {
       *ret = (char*)malloc(sizeof((*head)->data));
       out = *ret ? OK : ERROR;
-      if (out) strcpy(*ret, (*head)->data);
+      if (out) strcpy(*(char**)ret, (*head)->data);
+      printf("point = %s\n", (char*)((*head)->data));
     }
     if (out) {
       out = (*head)->type;
@@ -75,23 +76,11 @@ int s21_pop(stack** head, void** ret) {
   return out;
 }
 
-// int main(void) {
-//   stack* head = NULL;
-//   int er = 0, type = 0;
-//   void* out = NULL;
-//   er = s21_push(&head, "123");
-//   if (er) er = s21_push(&head, "+-/");
-//   if (er) er = s21_push(&head, "456");
-//   if (er) er = s21_push(&head, "789");
-//   while (head != NULL) {
-//     out = NULL;
-//     type = s21_pop(&head, &out);
-//     if (type == 0)
-//       printf("%d\n", *(int*)out);
-//     else if (type == 1)
-//       printf("%lf\n", *(double*)out);
-//     else if (type == 2)
-//       printf("%s\n", (char*)out);
-//     free(out);
-//   }
-// }
+int main(void) {
+  stack* head = NULL;
+  char* buffer = NULL;
+  char* dnt = "1+2+3*4";
+  buffer = s21_parcing_string(&head, dnt);
+  printf("%s\n", buffer);
+  return 0;
+}

@@ -10,9 +10,9 @@
 
 #define DIGITS "0123456789"
 // Заменим mod символом '%'. В калькуляторе будет иметь прежний вид
-#define OPERATORS "(+-*/%%^"
-#define OPEN_BRACKET "("
-#define CLOSE_BRACKET ")"
+#define OPERATORS "(  +- */%%^"
+#define OPEN_BRACKET '('
+#define CLOSE_BRACKET ')'
 #define FUNCTIONS "acos asin atan sqrt log  cos  sin  tan ln"
 
 #include <ctype.h>
@@ -34,4 +34,6 @@ int s21_pop(stack** head, void** ret);
 
 /***************************** STACK **************************/
 
+char* s21_parcing_string(stack** head, char* str);
+int s21_import_to_pn(stack** head, char* notation, void** pointer, int count);
 #endif  // S21_CALCULATE_H
