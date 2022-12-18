@@ -60,7 +60,6 @@ int s21_pop(stack** head, void** ret) {
       *ret = (char*)malloc(sizeof((*head)->data));
       out = *ret ? OK : ERROR;
       if (out) strcpy(*(char**)ret, (*head)->data);
-      printf("point = %s\n", (char*)((*head)->data));
     }
     if (out) {
       out = (*head)->type;
@@ -79,8 +78,16 @@ int s21_pop(stack** head, void** ret) {
 int main(void) {
   stack* head = NULL;
   char* buffer = NULL;
-  char* dnt = "1+2+3*4";
+  char* dnt = "1+2+3*4*4-5/4*2*4+2-1-1+2/3*4";
   buffer = s21_parcing_string(&head, dnt);
-  printf("%s\n", buffer);
+  if (buffer) {
+    printf("%s\n", buffer);
+    free(buffer);
+  }
   return 0;
 }
+
+// 1+2+3*4*4-5%/4*2*4+2-1-1+2/3*4 - входная строка
+// 1 2 + 3 4 * 4 - 5 / 4 * 2 * 4 + 2 - 1 - 1 + 2 / 3 * 4 * + - моё
+// 1 2 + 3 4 * 4 * + 5 4 / 2 * 4 * - 2 + 1 - 1 - 2 3 / 4 * + - калькулятор
+// 1 2 + 3 4 * 4 * 5 4 * 2 * 4 / 2 1 - 1 + 2 3 * 4 / -  ���� +
