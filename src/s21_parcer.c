@@ -1,5 +1,9 @@
 #include "s21_calculate.h"
 
+/// @brief Функция преобразования входной строки в ОПЗ
+/// @param head Указатель на верхушку стека
+/// @param str Подаваемая на вход строка
+/// @return Возвращает указатель на строку с ОПЗ
 char* s21_parcing_string(stack** head, char* str) {
   int i = 0, count = 0, func_count = 0, res = 0, priority = 0;
   // notation - хранит польскую запись с разделителями в виде '|'
@@ -93,11 +97,7 @@ void randomize(void) {
   time_t t = 0;
   char* str = "123456789";
   char* str2 = "+-/*^";
-
-  /* Intializes random number generator */
   srand((unsigned)time(&t));
-
-  /* Print 5 random numbers from 0 to 49 */
   for (i = 0; i < 127; i++) {
     printf("%c", str[rand() % 9]);
     printf("%c", str2[rand() % 5]);
