@@ -13,3 +13,4 @@ clean:
 	rm -f *.o
 	rm -f s21_calculate
 	rm -f RESULT_VALGRIND.txt
+	rm -f *.log

@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct stack {
   void* data;
@@ -37,4 +38,9 @@ int s21_pop(stack** head, void** ret);
 
 char* s21_parcing_string(stack** head, char* str);
 int s21_import_to_pn(stack** head, char* notation, void** pointer, int count);
+int s21_prioritization(char str, stack* head);
+
+void vizual_stack(stack* head);
+void randomize(void);
+
 #endif  // S21_CALCULATE_H

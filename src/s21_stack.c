@@ -75,19 +75,18 @@ int s21_pop(stack** head, void** ret) {
   return out;
 }
 
-int main(void) {
-  stack* head = NULL;
-  char* buffer = NULL;
-  char* dnt = "1+2+3*4*4-5/4*2*4+2-1-1+2/3*4";
-  buffer = s21_parcing_string(&head, dnt);
-  if (buffer) {
-    printf("%s\n", buffer);
-    free(buffer);
+void vizual_stack(stack* head) {
+  stack* tmp = head;
+  while (tmp) {
+    printf("stack - ");
+    if ((tmp)->type == FLOAT_TYPE) printf("%lf\n", *(double*)(tmp)->data);
+    if ((tmp)->type == INT_TYPE) printf("%d\n", *(int*)(tmp)->data);
+    if ((tmp)->type == CHAR_TYPE) printf("%s\n", (char*)(tmp)->data);
+    tmp = tmp->next;
   }
-  return 0;
+  printf("\n");
 }
 
-// 1+2+3*4*4-5%/4*2*4+2-1-1+2/3*4 - входная строка
-// 1 2 + 3 4 * 4 - 5 / 4 * 2 * 4 + 2 - 1 - 1 + 2 / 3 * 4 * + - моё
+// 1+2+3*4*4-5/4*2*4+2-1-1+2/3*4 - входная строка
+// 1 2 + 3 4 * 4 * + 5 4 / 2 * 4 * - 2 + 1 - 1 - 2 3 / 4 * + моё
 // 1 2 + 3 4 * 4 * + 5 4 / 2 * 4 * - 2 + 1 - 1 - 2 3 / 4 * + - калькулятор
-// 1 2 + 3 4 * 4 * 5 4 * 2 * 4 / 2 1 - 1 + 2 3 * 4 / -  ���� +
