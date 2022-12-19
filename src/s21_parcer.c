@@ -83,7 +83,7 @@ int s21_prioritization(char str, stack* head) {
     priority_str = (strchr(&OPERATORS[0], str) - &OPERATORS[0]) / 3;
     priority_stack =
         (strchr(&OPERATORS[0], *(char*)(head)->data) - &OPERATORS[0]) / 3;
-    if (priority_str <= priority_stack) res = 1;
+    if (priority_str <= priority_stack || priority_stack < 0) res = 1;
   }
   return res;
 }

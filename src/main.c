@@ -3,7 +3,9 @@
 int main(void) {
   stack* head = NULL;
   char* buffer = NULL;
-  char* dnt = "(1+2)*3";
+  char dnt[256] = {0};
+  printf("Введите выражение: ");
+  scanf("%s", dnt);
   buffer = s21_parcing_string(&head, dnt);
   if (buffer) {
     printf("%s\n", buffer);
