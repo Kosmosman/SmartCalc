@@ -1,8 +1,7 @@
 #include "s21_calculate.h"
 
 char* s21_parcing_string(stack** head, char* str) {
-  int i = 0, count = 0, func_count = 0, res = 0;
-  int priority = 0;
+  int i = 0, count = 0, func_count = 0, res = 0, priority = 0;
   // notation - хранит польскую запись с разделителями в виде '|'
   char* notation = (char*)calloc(512, sizeof(char));
   // func - буффер под функции
@@ -12,7 +11,7 @@ char* s21_parcing_string(stack** head, char* str) {
     while (str[i] != '\0') {
       // Если встречаем число - заносим его в нотацию. Точку относим к числу
       if (isdigit(str[i]) || str[i] == '.') {
-        while (isdigit(str[i])) {
+        while (isdigit(str[i]) || str[i] == '.') {
           notation[count++] = str[i++];
         }
         notation[count++] = SEPARATOR;
@@ -27,16 +26,13 @@ char* s21_parcing_string(stack** head, char* str) {
         res = s21_push(head, func);
         func[0] = '\0';
       }
-      // Если встречаем открывающую скобку - добавляем в стек (имеет низший
-      // приоритет)
-      if (str[i] == OPEN_BRACKET) res = s21_push(head, &str[i++]);
       // Если встречаем оператор - работает в зависимости от приоритетности и
       // заполненности стека
       if (strchr(OPERATORS, str[i]) && str[i] != '\0') {
         priority = s21_prioritization(str[i], *head);
         func[0] = str[i];
         func[1] = '\0';
-        while (priority) {
+        while (priority && str[i] != OPEN_BRACKET) {
           count = s21_import_to_pn(head, notation, &pointer, count);
           priority = s21_prioritization(str[i], *head);
         }
@@ -51,10 +47,11 @@ char* s21_parcing_string(stack** head, char* str) {
         while (*(char*)(*head)->data != '(' && count != -1) {
           count = s21_import_to_pn(head, notation, &pointer, count);
         }
-        if (*(char*)(*head)->data != '(') {
+        if (*(char*)(*head)->data == '(') {
           res = s21_pop(head, &pointer);
           if (res != -1) free(pointer);
         }
+        i++;
       }
     }
     while (*head) {
