@@ -8,6 +8,8 @@ all: s21_stack.c s21_calculate.h
 valgrind: all
 	CK_FORK=no valgrind $(VALGRIND_FLAGS) --log-file=RESULT_VALGRIND.txt ./s21_calculate
 
+rebuild: clean all
+
 clean:
 	rm -f *.out
 	rm -f *.o

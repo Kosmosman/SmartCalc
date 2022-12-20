@@ -11,22 +11,19 @@ int s21_push(stack** head, char* lec) {
   if (tmp) {
     tmp->next = *head;
     if (strpbrk(lec, DIGITS)) {
-      if (strchr(lec, '.')) {
-        tmp->type = FLOAT_TYPE;
-        double num1 = atof(lec);
-        tmp->data = (double*)malloc(sizeof(double));
-        res = tmp->data ? OK : ERROR;
-        if (res) *((double*)(tmp->data)) = num1;
-      } else {
-        tmp->type = INT_TYPE;
-        int num2 = atoi(lec);
-        tmp->data = (int*)malloc(sizeof(int));
-        res = tmp->data ? OK : ERROR;
-        if (res) *((int*)(tmp->data)) = num2;
-      }
-    } else {
+      tmp->type = FLOAT_TYPE;
+      double num1 = atof(lec);
+      tmp->data = (double*)malloc(sizeof(double));
+      res = tmp->data ? OK : ERROR;
+      if (res) *((double*)(tmp->data)) = num1;
+    } else if (strpbrk(lec, OPERATORS)) {
       tmp->type = CHAR_TYPE;
-      tmp->data = (char*)malloc(sizeof(lec) + 1);
+      tmp->data = (char*)malloc(sizeof(char));
+      res = tmp->data ? OK : ERROR;
+      if (res) *(char*)(tmp->data) = lec[0];
+    } else {
+      tmp->type = STR_TYPE;
+      tmp->data = (char*)malloc(sizeof(strlen(lec) + 1));
       res = tmp->data ? OK : ERROR;
       if (res) strcpy((char*)(tmp->data), lec);
     }
@@ -41,9 +38,9 @@ int s21_push(stack** head, char* lec) {
 /// @param head Адрес верхнего элемента
 /// @param ret Указатель на извлекаемое значение элемента стека
 /// @return Возвращает -1 в случае невыделения памяти.
-///         Возвращает 0, если записанный элемент - число с плавающей точкой.
-///         Возвращает 1, если записанный элемент - целочисленное значение.
-///         Возвращает 2, если записанный элемент - массив символов.
+///         Возвращает 0, если записанный элемент - функция.
+///         Возвращает 1, если записанный элемент - число с плавающей точкой.
+///         Возвращает 2, если записанный элемент - оператор.
 int s21_pop(stack** head, void** ret) {
   int out = 0;
   if ((*head) != NULL) {
@@ -52,14 +49,14 @@ int s21_pop(stack** head, void** ret) {
       *ret = (double*)malloc(sizeof(double));
       out = *ret ? OK : ERROR;
       if (out) **((double**)ret) = *(double*)(*head)->data;
-    } else if ((*head)->type == INT_TYPE) {
-      *ret = (int*)malloc(sizeof(int));
+    } else if ((*head)->type == CHAR_TYPE) {
+      *ret = (char*)malloc(sizeof(char));
       out = *ret ? OK : ERROR;
-      if (out) **((int**)ret) = *(int*)(*head)->data;
+      if (out) **((char**)ret) = *(char*)(*head)->data;
     } else {
       *ret = (char*)malloc(sizeof((*head)->data));
       out = *ret ? OK : ERROR;
-      if (out) strcpy(*(char**)ret, (*head)->data);
+      if (out) strcpy(*(char**)ret, (char*)(*head)->data);
     }
     if (out) {
       out = (*head)->type;
@@ -80,8 +77,8 @@ void vizual_stack(stack* head) {
   while (tmp) {
     printf("stack - ");
     if ((tmp)->type == FLOAT_TYPE) printf("%lf\n", *(double*)(tmp)->data);
-    if ((tmp)->type == INT_TYPE) printf("%d\n", *(int*)(tmp)->data);
-    if ((tmp)->type == CHAR_TYPE) printf("%s\n", (char*)(tmp)->data);
+    if ((tmp)->type == STR_TYPE) printf("%s\n", (char*)(tmp)->data);
+    if ((tmp)->type == CHAR_TYPE) printf("%c\n", *(char*)(tmp)->data);
     tmp = tmp->next;
   }
   printf("\n");

@@ -4,9 +4,9 @@
 #define OK 1
 #define ERROR 0
 
-#define INT_TYPE 0
-#define FLOAT_TYPE 1
-#define CHAR_TYPE 2
+#define FLOAT_TYPE 0
+#define CHAR_TYPE 1
+#define STR_TYPE 2
 
 #define DIGITS "0123456789"
 // Заменим mod символом '%'. В калькуляторе будет иметь прежний вид
@@ -36,9 +36,10 @@ int s21_pop(stack** head, void** ret);
 
 /***************************** STACK **************************/
 
-char* s21_parcing_string(stack** head, char* str);
+char* s21_parcing_string(stack** head, stack** num, char* str);
 int s21_import_to_pn(stack** head, char* notation, void** pointer, int count);
 int s21_prioritization(char str, stack* head);
+void s21_zero_func(char* str, int* count);
 
 void vizual_stack(stack* head);
 void randomize(void);
