@@ -263,6 +263,10 @@ int s21_prioritization(char str, stack* head) {
   return res;
 }
 
+/// @brief Вставка в строку другой строки
+/// @param str Заполняемая строка
+/// @param small_str Вставляемая строка
+/// @param position Место вставки
 void s21_insert(char* str, char* small_str, int position) {
   int len_s = (int)strlen(small_str);
   int len = (int)strlen(str);

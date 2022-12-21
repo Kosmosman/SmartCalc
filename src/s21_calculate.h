@@ -45,6 +45,7 @@ double s21_parcing_string(stack** head, stack** num, char* str_in,
 int s21_arithmetic(stack** head, stack** num, char* notation);
 int s21_prioritization(char str, stack* head);
 void s21_zero_func(char* str, int count);
+void s21_insert(char* str, char* small_str, int position);
 
 int s21_make_functions(stack** num, double* result, char* function);
 int s21_make_operators(stack** num, double* res, char operator);
@@ -60,7 +61,6 @@ int s21_check_close_bracket(stack** head, stack** num, char* str, int* position,
 /***************************** PARSING **************************/
 
 void vizual_stack(stack* head);
-void s21_insert(char* str, char* small_str, int position);
 void randomize(void);
 
 #endif  // S21_CALCULATE_H
