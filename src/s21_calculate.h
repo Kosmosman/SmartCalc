@@ -1,5 +1,6 @@
 #ifndef S21_CALCULATE_H
 #define S21_CALCULATE_H
+#define _CRT_SECURE_NO_WARNINGS
 
 #define OK 1
 #define ERROR -1
