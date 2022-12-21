@@ -12,22 +12,26 @@ int s21_push(stack** head, char* lec) {
     tmp->next = *head;
     if (strpbrk(lec, DIGITS)) {
       tmp->type = FLOAT_TYPE;
-      double num1 = atof(lec);
+      double num = atof(lec);
       tmp->data = (double*)malloc(sizeof(double));
       res = tmp->data ? OK : ERROR;
-      if (res) *((double*)(tmp->data)) = num1;
+      if (res) *((double*)(tmp->data)) = num;
     } else if (strpbrk(lec, OPERATORS)) {
-      tmp->type = CHAR_TYPE;
+      tmp->type = OPERATORS_TYPE;
       tmp->data = (char*)malloc(sizeof(char));
       res = tmp->data ? OK : ERROR;
       if (res) *(char*)(tmp->data) = lec[0];
     } else {
-      tmp->type = STR_TYPE;
+      tmp->type = FUNCTIONS_TYPE;
       tmp->data = (char*)malloc(sizeof(strlen(lec) + 1));
       res = tmp->data ? OK : ERROR;
       if (res) strcpy((char*)(tmp->data), lec);
     }
-    *head = tmp;
+    if (res)
+      *head = tmp;
+    else {
+      free(tmp);
+    }
   } else {
     res = ERROR;
   }
@@ -38,9 +42,9 @@ int s21_push(stack** head, char* lec) {
 /// @param head Адрес верхнего элемента
 /// @param ret Указатель на извлекаемое значение элемента стека
 /// @return Возвращает -1 в случае невыделения памяти.
-///         Возвращает 0, если записанный элемент - функция.
-///         Возвращает 1, если записанный элемент - число с плавающей точкой.
-///         Возвращает 2, если записанный элемент - оператор.
+///         Возвращает 0, если записанный элемент - число с плавающей точкой.
+///         Возвращает 1, если записанный элемент - оператор.
+///         Возвращает 2, если записанный элемент - функция.
 int s21_pop(stack** head, void** ret) {
   int out = 0;
   if ((*head) != NULL) {
@@ -49,7 +53,7 @@ int s21_pop(stack** head, void** ret) {
       *ret = (double*)malloc(sizeof(double));
       out = *ret ? OK : ERROR;
       if (out) **((double**)ret) = *(double*)(*head)->data;
-    } else if ((*head)->type == CHAR_TYPE) {
+    } else if ((*head)->type == OPERATORS_TYPE) {
       *ret = (char*)malloc(sizeof(char));
       out = *ret ? OK : ERROR;
       if (out) **((char**)ret) = *(char*)(*head)->data;
@@ -77,8 +81,8 @@ void vizual_stack(stack* head) {
   while (tmp) {
     printf("stack - ");
     if ((tmp)->type == FLOAT_TYPE) printf("%lf\n", *(double*)(tmp)->data);
-    if ((tmp)->type == STR_TYPE) printf("%s\n", (char*)(tmp)->data);
-    if ((tmp)->type == CHAR_TYPE) printf("%c\n", *(char*)(tmp)->data);
+    if ((tmp)->type == OPERATORS_TYPE) printf("%c\n", *(char*)(tmp)->data);
+    if ((tmp)->type == FUNCTIONS_TYPE) printf("%s\n", (char*)(tmp)->data);
     tmp = tmp->next;
   }
   printf("\n");
