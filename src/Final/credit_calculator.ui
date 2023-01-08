@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>credit_calculator</class>
+ <widget class="QWidget" name="credit_calculator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>339</width>
+    <height>220</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	background-color: rgb(209, 214, 255);
+}</string>
+  </property>
+  <widget class="QWidget" name="formLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>321</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Credit amount</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="lineEdit_amount">
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+	color: black;
+	background-color: white;
+}</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Term</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineEdit_term">
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+	color: black;
+	background-color: white;
+}</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label">
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Interest rate</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lineEdit_rate">
+      <property name="styleSheet">
+       <string notr="true">QLineEdit {
+	color: black;
+	background-color: white;
+}</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Type</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QRadioButton" name="radioButton_An">
+      <property name="styleSheet">
+       <string notr="true">QRadioButton {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Annuity</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QRadioButton" name="radioButton_Diff">
+      <property name="styleSheet">
+       <string notr="true">QRadioButton {
+	color: black;
+}</string>
+      </property>
+      <property name="text">
+       <string>Differentiated</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>180</y>
+     <width>171</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	border: 1px solid grey;
+	background-color: silver;
+	color: black;
+}
+
+QPushButton:pressed {
+	background-color: rgb(172, 175, 172);
+}</string>
+   </property>
+   <property name="text">
+    <string>Calculate</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

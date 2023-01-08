@@ -71,19 +71,8 @@ int s21_pop(stack** head, void** ret) {
       out = -1;
     }
   } else {
-    free(head);
+    head = NULL;
+    out = ERROR;
   }
   return out;
-}
-
-void vizual_stack(stack* head) {
-  stack* tmp = head;
-  while (tmp) {
-    printf("stack - ");
-    if ((tmp)->type == FLOAT_TYPE) printf("%lf\n", *(double*)(tmp)->data);
-    if ((tmp)->type == OPERATORS_TYPE) printf("%c\n", *(char*)(tmp)->data);
-    if ((tmp)->type == FUNCTIONS_TYPE) printf("%s\n", (char*)(tmp)->data);
-    tmp = tmp->next;
-  }
-  printf("\n");
 }

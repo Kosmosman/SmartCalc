@@ -23,6 +23,7 @@
     "algorithm": "c",
     "bitset": "c",
     "chrono": "c",
-    "s21_calculate.h": "c"
+    "s21_calculate.h": "c",
+    "stdlib.h": "c"
   }
 }

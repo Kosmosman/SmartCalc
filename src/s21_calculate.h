@@ -1,9 +1,11 @@
 #ifndef S21_CALCULATE_H
 #define S21_CALCULATE_H
+
 #define _CRT_SECURE_NO_WARNINGS
 
 #define OK 1
 #define ERROR -1
+#define UNDEFINED -2
 
 #define FLOAT_TYPE 0
 #define OPERATORS_TYPE 1
@@ -41,15 +43,21 @@ int s21_pop(stack** head, void** ret);
 
 /***************************** PARSING **************************/
 
-double s21_parcing_string(stack** head, stack** num, char* str_in,
-                          double* ansver);
+int s21_parcing_string(stack** head, stack** num, char* str_in, double* answer,
+                       double x);
 int s21_arithmetic(stack** head, stack** num, char* notation);
 int s21_prioritization(char str, stack* head);
 void s21_zero_func(char* str, int count);
 void s21_insert(char* str, char* small_str, int position);
+void s21_double_to_str(char* str, double num);
+int s21_to_empty_stacks(stack** head, stack** num, char* buff);
+void s21_clean_stack(stack** head, stack** num);
+void s21_create_dot_for_graph(char* str_in, double dot);
 
 int s21_make_functions(stack** num, double* result, char* function);
-int s21_make_operators(stack** num, double* res, char operator);
+int s21_make_operators(stack** num, double* res, char ch_operator);
+int s21_validation_arcfunc(double** result, double sample, double digit);
+int s21_validation_log(double** result, double sample, double digit);
 
 int s21_check_operators(stack** head, stack** num, char* str, int* position,
                         char* notation, int* flag);
@@ -58,10 +66,9 @@ int s21_check_digit(stack** num, char* str, char* buff, int* position,
 int s21_check_functions(stack** head, char* str, int* position, int* flag);
 int s21_check_close_bracket(stack** head, stack** num, char* str, int* position,
                             char* notation);
-
 /***************************** PARSING **************************/
 
-void vizual_stack(stack* head);
-void randomize(void);
+void s21_credit_calculator(double amount, double rate, int term, double* result,
+                           char type);
 
 #endif  // S21_CALCULATE_H

@@ -5,32 +5,37 @@
 /// @param head Стек операторов/функций
 /// @param num Стек чисел
 /// @param str Считываемая строка с выражением
-/// @param ansver Указатель на полученный результат выражения
+/// @param answer Указатель на полученный результат выражения
+/// @param x Точка по оси абсцисс (для графиков)
 /// @return Возвращает ERROR в случае невыделения памяти в одной из функций
-double s21_parcing_string(stack** head, stack** num, char* str_in,
-                          double* ansver) {
+int s21_parcing_string(stack** head, stack** num, char* str_in, double* answer,
+                       double x) {
   int i = 0, res = 0, flag = 1;
   char* buff = (char*)calloc(256, sizeof(char));
-  char* str = (char*)calloc(512, sizeof(char));
+  char* str = (char*)calloc(2048, sizeof(char));
   void* pointer = NULL;
   if (buff && str) {
-    strcpy(str, str_in);
-    while (str[i] != '\0' && res != ERROR) {
-      if (res != ERROR) res = s21_check_digit(num, str, buff, &i, &flag);
-      if (res != ERROR) res = s21_check_functions(head, str, &i, &flag);
-      if (res != ERROR)
-        res = s21_check_operators(head, num, str, &i, buff, &flag);
-      if (res != ERROR) res = s21_check_close_bracket(head, num, str, &i, buff);
+    strncpy(str, str_in, 255);
+    s21_create_dot_for_graph(str, x);
+    while (str[i] != '\0' && res >= 0) {
+      if (res >= 0) res = s21_check_digit(num, str, buff, &i, &flag);
+      if (res >= 0) res = s21_check_functions(head, str, &i, &flag);
+      if (res >= 0) res = s21_check_operators(head, num, str, &i, buff, &flag);
+      if (res >= 0) res = s21_check_close_bracket(head, num, str, &i, buff);
+      if (res == 5) res = -1;
+      if (*head == NULL && *num == NULL) res = -1;
     }
-    while (*head && res != ERROR) {
-      res = s21_arithmetic(head, num, buff);
+    if (res >= 0) res = s21_to_empty_stacks(head, num, buff);
+    s21_pop(num, &pointer);
+    if (*num != NULL || *head != NULL) {
+      s21_clean_stack(head, num);
+      res = -1;
     }
-    if (res != ERROR) free(*head);
-    res = s21_pop(num, &pointer);
-    if (res != ERROR) {
-      *ansver = *(double*)pointer;
-      free(pointer);
+    if (res != ERROR && pointer != NULL) {
+      *answer = *(double*)pointer;
     }
+    if (pointer != NULL) free(pointer);
+    pointer = NULL;
   }
   if (buff) free(buff);
   if (str) free(str);
@@ -55,7 +60,7 @@ int s21_arithmetic(stack** head, stack** num, char* buff) {
   }
   if (pointer) free(pointer);
   pointer = NULL;
-  if (res != ERROR) {
+  if (res >= 0) {
     sprintf(buff, "%.12lf", result);
     res = s21_push(num, buff);
     s21_zero_func(buff, (int)strlen(buff));
@@ -69,7 +74,7 @@ int s21_arithmetic(stack** head, stack** num, char* buff) {
 /// @param function Переданная функция
 /// @return Возвращает ERROR в случае невыделения памяти под digit
 int s21_make_functions(stack** num, double* result, char* function) {
-  void* digit = 0;
+  void* digit = NULL;
   int error = 0;
   error = s21_pop(num, &digit);
   if (error != ERROR) {
@@ -84,24 +89,32 @@ int s21_make_functions(stack** num, double* result, char* function) {
         *result = tan(*(double*)digit);
         break;
       case 3:
-        *result = sqrt(*(double*)digit);
+        if (*(double*)digit < 0)
+          error = ERROR;
+        else
+          *result = sqrt(*(double*)digit);
         break;
       case 4:
-        *result = log10(*(double*)digit);
+        error = s21_validation_log(&result, log10(*(double*)digit),
+                                   *(double*)digit);
         break;
       case 5:
-        *result = acos(*(double*)digit);
+        error = s21_validation_arcfunc(&result, acos(*(double*)digit),
+                                       *(double*)digit);
         break;
       case 6:
-        *result = asin(*(double*)digit);
+        error = s21_validation_arcfunc(&result, asin(*(double*)digit),
+                                       *(double*)digit);
         break;
       case 7:
         *result = atan(*(double*)digit);
         break;
       case 8:
-        *result = log(*(double*)digit);
+        error =
+            s21_validation_log(&result, log(*(double*)digit), *(double*)digit);
         break;
       default:
+        error = ERROR;
         break;
     }
   }
@@ -110,18 +123,48 @@ int s21_make_functions(stack** num, double* result, char* function) {
   return error;
 }
 
+/// @brief Проверка на корректность вводимых значений для arcsin и arccos
+/// @param result Переменная, выделенная под результат вычислений
+/// @param sample Выражение
+/// @param digit Вводимое число
+/// @return Возвращает ERROR при вводе данных, не вписывающихся в диапазон
+/// допустимых значений
+int s21_validation_arcfunc(double** result, double sample, double digit) {
+  int error = 0;
+  if (digit >= -1 && digit <= 1)
+    **result = sample;
+  else
+    error = ERROR;
+  return error;
+}
+
+/// @brief Проверка на корректность вводимых значений для log и ln
+/// @param result Переменная, выделенная под результат вычислений
+/// @param sample Выражение
+/// @param digit Вводимое число
+/// @return Возвращает ERROR при вводе данных, не вписывающихся в диапазон
+/// допустимых значений
+int s21_validation_log(double** result, double sample, double digit) {
+  int error = 0;
+  if (digit > 0)
+    **result = sample;
+  else
+    error = ERROR;
+  return error;
+}
+
 /// @brief Вычисление результата с оператором
 /// @param num Стек с числами
 /// @param res Результирующее значение
 /// @param operator Переданный оператор
 /// @return Возвращает ERROR в случае невыделения памяти под digit1 и/или digit2
-int s21_make_operators(stack** num, double* res, char operator) {
+int s21_make_operators(stack** num, double* res, char ch_operator) {
   void *digit1 = NULL, *digit2 = NULL;
   int error = 0;
   error = s21_pop(num, &digit2);
   if (error != ERROR) error = s21_pop(num, &digit1);
   if (error != ERROR) {
-    switch (strchr(OPERATORS, operator) - &OPERATORS[0]) {
+    switch (strchr(OPERATORS, ch_operator) - &OPERATORS[0]) {
       case 3:
         *res = *(double*)digit1 + *(double*)digit2;
         break;
@@ -132,7 +175,10 @@ int s21_make_operators(stack** num, double* res, char operator) {
         *res = *(double*)digit1 * *(double*)digit2;
         break;
       case 7:
-        *res = *(double*)digit1 / *(double*)digit2;
+        if (*(double*)digit2 == 0)
+          error = -2;
+        else
+          *res = *(double*)digit1 / *(double*)digit2;
         break;
       case 8:
         *res = fmod(*(double*)digit1, *(double*)digit2);
@@ -141,6 +187,7 @@ int s21_make_operators(stack** num, double* res, char operator) {
         *res = pow(*(double*)digit1, *(double*)digit2);
         break;
       default:
+        error = ERROR;
         break;
     }
   }
@@ -161,7 +208,7 @@ int s21_check_digit(stack** num, char* str, char* buff, int* position,
                     int* flag) {
   int count = 0, res = 0;
   if (isdigit(str[*position]) || str[*position] == '.') {
-    while (isdigit(str[*position]) || str[*position] == '.') {
+    while ((isdigit(str[*position]) || str[*position] == '.')) {
       buff[count++] = str[(*position)++];
     }
     res = s21_push(num, buff);
@@ -184,6 +231,7 @@ int s21_check_functions(stack** head, char* str, int* position, int* flag) {
   if (isalpha(str[*position])) {
     while (isalpha(str[*position])) func[func_position++] = str[(*position)++];
     res = s21_push(head, func);
+    if (res >= 0) s21_push(head, "(");
     *flag = 1;
   }
   return res;
@@ -208,12 +256,13 @@ int s21_check_operators(stack** head, stack** num, char* str, int* position,
     }
     priority = s21_prioritization(str[*position], *head);
     ops[ops_count++] = str[(*position)++];
-    while (priority && ops[0] != OPEN_BRACKET && res != ERROR &&
-           ((*num)->next != NULL || (*head)->type == 2)) {
+    while (priority && ops[0] != OPEN_BRACKET && res >= 0 &&
+           (*num != NULL || (*head)->type == 2)) {
       res = s21_arithmetic(head, num, buff);
       priority = s21_prioritization(ops[0], *head);
     }
-    if (res != ERROR) s21_push(head, ops);
+    if (res >= 0) s21_push(head, ops);
+    if (ops[0] == '^') s21_push(head, "(");
     *flag = 1;
   }
   return res;
@@ -231,21 +280,43 @@ int s21_check_close_bracket(stack** head, stack** num, char* str, int* position,
   int res = 0;
   void* pointer = NULL;
   if (str[*position] == CLOSE_BRACKET) {
-    while (*(char*)(*head)->data != '(' && res != ERROR) {
+    while (*head && *(char*)(*head)->data != '(' && res >= 0) {
       res = s21_arithmetic(head, num, buff);
     }
-    if (*(char*)(*head)->data == '(') {
+    if (*head != NULL && *(char*)(*head)->data == '(') {
       res = s21_pop(head, &pointer);
-      if (res != ERROR) free(pointer);
+      if (pointer != NULL) free(pointer);
       pointer = NULL;
+    } else {
+      res = ERROR;
     }
     *position += 1;
   }
   return res;
 }
 
-/// @brief Функция определение приоритета записываемой функции по отношению к
-/// верхушке стека
+/// @brief Выполнение всех операций в стеке после считывания входной строки до
+/// конца
+/// @param head Стек с операторами/функциями
+/// @param num Стек с числами
+/// @param buff Буффер
+/// @return Возвращает ERROR в случае ошибки выделения памяти
+int s21_to_empty_stacks(stack** head, stack** num, char* buff) {
+  int res = 0;
+  void* pointer = NULL;
+  while (*head) {
+    if ((*head)->type == OPERATORS_TYPE && *(char*)(*head)->data == '(')
+      res = s21_pop(head, &pointer);
+    else
+      res = s21_arithmetic(head, num, buff);
+    if (pointer != NULL) free(pointer);
+    pointer = NULL;
+  }
+  return res;
+}
+
+/// @brief Функция определение приоритета записываемой функции по отношению
+/// к верхушке стека
 /// @param str Сравниваемый символ (если считываемый символ - буква, имеет
 /// высший приоритет)
 /// @param head Указатель на верхушку стека
@@ -284,14 +355,42 @@ void s21_zero_func(char* str, int count) {
   for (int i = 0; i < count; i++) str[i] = 0;
 }
 
-void randomize(void) {
-  int i = 0;
-  time_t t = 0;
-  char* str = "123456789";
-  char* str2 = "+-/*^";
-  srand((unsigned)time(&t));
-  for (i = 0; i < 127; i++) {
-    printf("%c", str[rand() % 9]);
-    printf("%c", str2[rand() % 5]);
+/// @brief Перевод числа с плавающей точкой в строку с удалением незначащих
+/// нулей
+/// @param str Строка для записи числа в char представлении
+/// @param num Число с плавающей точкой
+void s21_double_to_str(char* str, double num) {
+  sprintf(str, "%.6lf", num);
+  int len = (int)strlen(str) - 1;
+  for (; str[len] == '0'; len--) str[len] = '\0';
+  if (str[len] == '.') str[len] = '\0';
+}
+
+/// @brief Функция очищения стаков в случае обнаружения ошибки
+/// @param head Стек операторов/функций
+/// @param num Стек чисел
+void s21_clean_stack(stack** head, stack** num) {
+  void* tmp = NULL;
+  while (*head != NULL) {
+    s21_pop(head, &tmp);
+  }
+  while (*num != NULL) {
+    s21_pop(num, &tmp);
+  }
+  if (tmp != NULL) free(tmp);
+  head = num = tmp = NULL;
+}
+
+/// @brief Функция подстановки х на переденные координаты точек
+/// @param head Стек операторов/функций
+/// @param num Стек чисел
+/// @param str_in Входная строка
+/// @param dot Число (точка), подставляемая заместо числа
+void s21_create_dot_for_graph(char* str_in, double dot) {
+  char number[32] = {0};
+  sprintf(number, "(%lf)", dot);
+  char* pointer = NULL;
+  while ((pointer = strchr(str_in, 'x'))) {
+    s21_insert(str_in, number, pointer - str_in);
   }
 }
