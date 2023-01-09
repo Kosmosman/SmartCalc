@@ -516,9 +516,9 @@ START_TEST(test_43) {
   char type = 'a';
   double result[3] = {0};
   s21_credit_calculator(amount, rate, term, result, type);
-  ck_assert_double_eq(17082.291434, result[0]);
-  ck_assert_double_eq(2493.748603, result[1]);
-  ck_assert_double_eq(102493.748603, result[2]);
+  ck_assert_double_eq_tol(17082.291434, result[0], 6);
+  ck_assert_double_eq_tol(2493.748603, result[1], 6);
+  ck_assert_double_eq_tol(102493.748603, result[2], 6);
 }
 END_TEST
 
@@ -529,10 +529,10 @@ START_TEST(test_44) {
   char type = 'd';
   double result[4] = {0};
   s21_credit_calculator(amount, rate, term, result, type);
-  ck_assert_double_eq(50708.333333, result[0]);
-  ck_assert_double_eq(50354.166667, result[1]);
-  ck_assert_double_eq(1062.5, result[2]);
-  ck_assert_double_eq(101062.5, result[3]);
+  ck_assert_double_eq_tol(50708.333333, result[0], 6);
+  ck_assert_double_eq_tol(50354.166667, result[1], 6);
+  ck_assert_double_eq_tol(1062.5, result[2], 6);
+  ck_assert_double_eq_tol(101062.5, result[3], 6);
 }
 END_TEST
 

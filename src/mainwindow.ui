@@ -888,11 +888,14 @@ QPushButton:pressed {
 	border: 1px solid grey;
 }</string>
        </property>
+       <property name="text">
+        <string>0</string>
+       </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>100</x>

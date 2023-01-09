@@ -4,7 +4,7 @@
 #include <QWidget>
 
 extern "C" {
-#include "../s21_calculate.h"
+#include "s21_calculate.h"
 }
 
 namespace Ui {

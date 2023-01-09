@@ -361,9 +361,16 @@ void s21_zero_func(char* str, int count) {
 /// @param num Число с плавающей точкой
 void s21_double_to_str(char* str, double num) {
   sprintf(str, "%.6lf", num);
-  int len = (int)strlen(str) - 1;
+  int len = (int)strlen(str) - 1, out = 1;
   for (; str[len] == '0'; len--) str[len] = '\0';
-  if (str[len] == '.') str[len] = '\0';
+  if (str[len] == '.' || str[len] == ',') str[len] = '\0';
+  len = (int)strlen(str);
+  for (int i = 0; i < len && out; i++) {
+    if (str[i] == ',') {
+      str[i] = '.';
+      out = 0;
+    }
+  }
 }
 
 /// @brief Функция очищения стаков в случае обнаружения ошибки

@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->pushButton_sqrt, SIGNAL(clicked()), this,
           SLOT(input_functions()));
 
-//  connect(ui->pushButton_dot, SIGNAL(clicked()), this, SLOT(input_dot()));
+  connect(ui->pushButton_dot, SIGNAL(clicked()), this, SLOT(input_dot()));
 
   connect(ui->pushButton_result, SIGNAL(clicked()), this, SLOT(input_result()));
 
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->pushButton_result->setCheckable(true);
   ui->pushButton_x->setCheckable(true);
-  ui->pushButton_dot->setCheckable(true);
+  ui->pushButton_dot->setCheckable(false);
 
   validator_d.setNotation(QDoubleValidator::StandardNotation);
   ui->lineEdit_value->setValidator(&validator_d);
@@ -83,8 +83,21 @@ void MainWindow::input_digit() {
 }
 
 void MainWindow::input_dot() {
-  if (!(ui->label->text().contains('.')))
-    ui->label->setText(ui->label->text() + ".");
+  int len = ui->label->text().length();
+  char *str = new char(ui->label->text().length());
+  int flag = 0;
+  QByteArray tmp = ui->label->text().toLatin1();
+  strlcpy(str, tmp, ui->label->text().length() + 1);
+  for (int i = 0; i < len; i++) {
+    if (str[i] == '.') {
+      flag = 1;
+    }
+    if (!(std::isdigit(str[i])) && str[i] != '.' && str[i] != 'x') {
+      flag = 0;
+    }
+  }
+  if (flag == 0) ui->label->setText(ui->label->text() + ".");
+  if (str) delete (str);
 }
 
 void MainWindow::input_operators() {
@@ -96,7 +109,9 @@ void MainWindow::input_operators() {
   else
     result = ui->label->text() + button->text();
   ui->label->setText(result);
+  ui->pushButton_dot->setChecked(false);
 }
+
 void MainWindow::input_functions() {
   QPushButton *button = (QPushButton *)sender();
   if (ui->pushButton_result->isChecked()) {
@@ -125,8 +140,7 @@ void MainWindow::input_result() {
     ui->label->setText("undefined");
   } else {
     char ansver[256] = {'\0'};
-    char *pointer = ansver;
-    s21_double_to_str(pointer, result);
+    s21_double_to_str(ansver, result);
     ui->label->setText(ansver);
   }
   ui->pushButton_result->setChecked(true);
@@ -135,8 +149,8 @@ void MainWindow::input_result() {
 }
 
 void MainWindow::input_delete() {
-    ui->label->setText("");
-    ui->pushButton_dot->setChecked(false);
+  ui->label->setText("");
+  ui->pushButton_dot->setChecked(false);
 }
 
 void MainWindow::check_empty_and_error() {
@@ -197,7 +211,7 @@ void MainWindow::on_pushButton_graphic_clicked() {
 
 void MainWindow::setBorders(double *topBorder, double *downBorder) {
   if ((ui->label->text().contains("l") || ui->label->text().contains("sqrt")) &&
-      ui->lineEdit_x_start->text().toDouble() < 0) {
+      ui->lineEdit_x_start->text().toDouble() <= 0) {
     *downBorder = 0.01;
   }
   if (ui->label->text().contains("acos") ||
@@ -206,13 +220,3 @@ void MainWindow::setBorders(double *topBorder, double *downBorder) {
     *downBorder = -1;
   }
 }
-
-void MainWindow::on_pushButton_dot_clicked()
-{
-    if (ui->label->text().isEmpty()) ui->pushButton_dot->setChecked(false);
-    if (!(ui->pushButton_dot->isChecked())) {
-        ui->pushButton_dot->setChecked(true);
-        ui->label->setText(ui->label->text() + ".");
-    }
-}
-

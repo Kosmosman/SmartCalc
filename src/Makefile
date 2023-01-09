@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g $(ASAN)
 #ASAN = -fsanitize=address
-SOURCE = s21_stack.c s21_parcer.c unit_test.c s21_additional_calculator.c
+SOURCE = s21_stack.c s21_parcer.c unit_test.c s21_credit_calculator.c
 CHECK = -lcheck
 GCOV_FLAGS?=-fprofile-arcs -ftest-coverage
 LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
@@ -19,21 +19,21 @@ endif
 
 all: install
 
-install:
-	cd Final && qmake && make && make clean && rm -f Makefile
-	mkdir ../Application
-	mv Final/joaquind_calc.app ../Application
+install: clean
+	mkdir Application
+	cd Application && cmake ../CMakeLists.txt && make
 
 uninstall:
 	rm -rf ../Application
 
+reinstall: uninstall install
+
 start:
-	open ../Application/joaquind_calc.app
+	open Application/TheBestCalculatorInTheWorld.app
 
 dist: clean
 	mkdir joaquind_smart_calculator
-	cp Makefile s21_*.c *.h joaquind_smart_calculator
-	cp Final/* joaquind_smart_calculator
+	cp Makefile s21_*.c *.h *.cpp *.ui *.txt QCustomPlot-library Makefile joaquind_smart_calculator
 	tar cvzf joaquind_smart_calculator.tgz joaquind_smart_calculator
 	mkdir ../Distribution
 	mv joaquind_smart_calculator.tgz ../Distribution
@@ -86,5 +86,11 @@ clean:
 	rm -rf joaquind_smart_calculator.tgz
 	rm -rf joaquind_smart_calculator
 	rm -rf ../Distribution
+	rm -rf report
+	rm -fr Application 
+	rm -rf build
+	rm -rf CMakeFiles
+	rm -f CMakeCache.txt
+	rm -f cmake_install.cmake
 
 delete: clean uninstall

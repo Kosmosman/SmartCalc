@@ -10,7 +10,7 @@
 #include "graphics.h"
 
 extern "C" {
-#include "../s21_calculate.h"
+#include "s21_calculate.h"
 }
 
 QT_BEGIN_NAMESPACE
@@ -41,8 +41,6 @@ class MainWindow : public QMainWindow {
   void on_pushButton_graphic_clicked();
 
   void setBorders(double *, double *);
-
-  void on_pushButton_dot_clicked();
 
 signals:
   void to_graphic();
