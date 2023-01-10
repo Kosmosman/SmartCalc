@@ -231,7 +231,6 @@ int s21_check_functions(stack** head, char* str, int* position, int* flag) {
   if (isalpha(str[*position])) {
     while (isalpha(str[*position])) func[func_position++] = str[(*position)++];
     res = s21_push(head, func);
-    if (res >= 0) s21_push(head, "(");
     *flag = 1;
   }
   return res;
