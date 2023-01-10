@@ -74,6 +74,11 @@ else
 endif
 	CK_FORK=no valgrind $(VALGRIND_FLAGS) --log-file=RESULT_VALGRIND.txt ./s21_test
 
+clang:
+	cp ../materials/linters/.clang-format .
+	clang-format -n -style=Google *.c *.cpp
+	rm -f .clang-format
+
 clean:
 	rm -f *.out
 	rm -f *.o

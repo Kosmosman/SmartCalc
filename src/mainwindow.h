@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
 
   void setBorders(double *, double *);
 
-signals:
+ signals:
   void to_graphic();
 
  private:
