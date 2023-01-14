@@ -16,23 +16,23 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        credit_calculator.cpp
-        credit_c_a.cpp
-        graphics.cpp
-        mainwindow.h
-        credit_calculator.h
-        credit_c_a.h
-        graphics.h
-        mainwindow.ui
-        credit_c_a.ui
-        credit_calculator.ui
-        graphics.ui
-        s21_calculate.h
-        s21_credit_calculator.c
-        s21_parcer.c
-        s21_stack.c
+        frontend/main.cpp
+        frontend/mainwindow.cpp
+        frontend/credit_calculator.cpp
+        frontend/credit_c_a.cpp
+        frontend/graphics.cpp
+        frontend/mainwindow.h
+        frontend/credit_calculator.h
+        frontend/credit_c_a.h
+        frontend/graphics.h
+        frontend/mainwindow.ui
+        frontend/credit_c_a.ui
+        frontend/credit_calculator.ui
+        frontend/graphics.ui
+        backend/s21_calculate.h
+        backend/s21_credit_calculator.c
+        backend/s21_parcer.c
+        backend/s21_stack.c
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

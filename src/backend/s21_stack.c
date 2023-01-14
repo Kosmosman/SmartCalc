@@ -1,3 +1,5 @@
+// Copyright joaquind 2023
+
 #include "s21_calculate.h"
 
 /// @brief Занесение структуры в стек

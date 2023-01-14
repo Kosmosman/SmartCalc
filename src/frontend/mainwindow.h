@@ -10,7 +10,7 @@
 #include "graphics.h"
 
 extern "C" {
-#include "s21_calculate.h"
+#include "../backend/s21_calculate.h"
 }
 
 QT_BEGIN_NAMESPACE
@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
 
   void setBorders(double *, double *);
 
- signals:
+signals:
   void to_graphic();
 
  private:

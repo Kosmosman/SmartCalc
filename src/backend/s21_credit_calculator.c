@@ -1,3 +1,5 @@
+// Copyright joaquind 2023
+
 #include "s21_calculate.h"
 
 void s21_credit_calculator(double amount, double rate, int term, double* result,

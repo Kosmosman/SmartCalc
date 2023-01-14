@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "s21_calculate.h"
+#include "backend/s21_calculate.h"
 
 START_TEST(test_1) {
   stack* head = NULL;
@@ -510,6 +510,58 @@ START_TEST(test_42) {
 END_TEST
 
 START_TEST(test_43) {
+  stack* head = NULL;
+  stack* num = NULL;
+  char* str = "sin(cos(2))";
+  char ansver_str[64] = {0};
+  double ansver = 0;
+  int res = s21_parcing_string(&head, &num, str, &ansver, 5);
+  s21_double_to_str(ansver_str, ansver);
+  ck_assert_int_eq(1, res);
+  ck_assert_str_eq(ansver_str, "-0.404239");
+}
+END_TEST
+
+START_TEST(test_44) {
+  stack* head = NULL;
+  stack* num = NULL;
+  char* str = "ln(2)+ln(3)-4+(5*6)^3.2+sin(10)";
+  char ansver_str[64] = {0};
+  double ansver = 0;
+  int res = s21_parcing_string(&head, &num, str, &ansver, 5);
+  s21_double_to_str(ansver_str, ansver);
+  ck_assert_int_eq(1, res);
+  ck_assert_str_eq(ansver_str, "53304.710856");
+}
+END_TEST
+
+START_TEST(test_45) {
+  stack* head = NULL;
+  stack* num = NULL;
+  char* str = "5-3*2^4+5*(2.2*4.3)^2.1*5";
+  char ansver_str[64] = {0};
+  double ansver = 0;
+  int res = s21_parcing_string(&head, &num, str, &ansver, 5);
+  s21_double_to_str(ansver_str, ansver);
+  ck_assert_int_eq(1, res);
+  ck_assert_str_eq(ansver_str, "2757.988947");
+}
+END_TEST
+
+START_TEST(test_46) {
+  stack* head = NULL;
+  stack* num = NULL;
+  char* str = "asin(0.1)^(2+0.5)*3-1";
+  char ansver_str[64] = {0};
+  double ansver = 0;
+  int res = s21_parcing_string(&head, &num, str, &ansver, 5);
+  s21_double_to_str(ansver_str, ansver);
+  ck_assert_int_eq(1, res);
+  ck_assert_str_eq(ansver_str, "-0.990473");
+}
+END_TEST
+
+START_TEST(test_47) {
   int term = 6;
   double amount = 100000;
   double rate = 8.5;
@@ -522,7 +574,7 @@ START_TEST(test_43) {
 }
 END_TEST
 
-START_TEST(test_44) {
+START_TEST(test_48) {
   int term = 2;
   double amount = 100000;
   double rate = 8.5;
@@ -585,6 +637,10 @@ int main(void) {
   tcase_add_test(tc, test_42);
   tcase_add_test(tc, test_43);
   tcase_add_test(tc, test_44);
+  tcase_add_test(tc, test_45);
+  tcase_add_test(tc, test_46);
+  tcase_add_test(tc, test_47);
+  tcase_add_test(tc, test_48);
 
   srunner_run_all(sr, CK_ENV);
   res = srunner_ntests_failed(sr);

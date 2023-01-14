@@ -1,3 +1,5 @@
+//Copyright joaquind 2023
+
 #ifndef S21_CALCULATE_H
 #define S21_CALCULATE_H
 

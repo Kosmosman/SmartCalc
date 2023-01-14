@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g $(ASAN)
 #ASAN = -fsanitize=address
-SOURCE = s21_stack.c s21_parcer.c unit_test.c s21_credit_calculator.c
+SOURCE = unit_test.c backend/s21_stack.c backend/s21_parcer.c backend/s21_credit_calculator.c
 CHECK = -lcheck
 GCOV_FLAGS?=-fprofile-arcs -ftest-coverage
 LINUX_FLAGS = -lrt -lpthread -lm -lsubunit
@@ -24,7 +24,8 @@ install: clean
 	mkdir ../SmartCalcJo/Application
 	cp -r . ../SmartCalcJo
 	cd ../SmartCalcJo/Application && cmake ../CMakeLists.txt && make
-	rm -f ../SmartCalcJo/*.* 
+	rm -rf ../SmartCalcJo/backend
+	rm -rf ../SmartCalcJo/frontend
 	rm -f ../SmartCalcJo/Makefile
 
 uninstall: clean
@@ -37,8 +38,10 @@ start:
 
 dist: clean
 	mkdir joaquind_smart_calculator
-	cp Makefile s21_*.c *.h *.cpp *.ui *.txt Makefile joaquind_smart_calculator
+	cp -r backend joaquind_smart_calculator
+	cp -r frontend joaquind_smart_calculator
 	cp -r QCustomPlot-library joaquind_smart_calculator
+	cp *.txt Makefile joaquind_smart_calculator
 	tar cvzf joaquind_smart_calculator.tgz joaquind_smart_calculator
 	mkdir ../Distribution
 	mv joaquind_smart_calculator.tgz ../Distribution
@@ -47,7 +50,10 @@ dist: clean
 dvi:
 	open instruction.html
 
-test: $(SOURCE) s21_calculate.h
+leaks:
+	leaks -atExit -- ./../SmartCalcJo/Application/TheBestCalculatorInTheWorld.app/Contents/MacOS/TheBestCalculatorInTheWorld
+
+test: $(SOURCE) backend/s21_calculate.h
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) $(SOURCE) -o s21_test $(CHECK)
 else 
@@ -66,18 +72,13 @@ endif
 	genhtml -o report s21_test.info
 	$(OPEN_CMD) ./report/index.html
 
-valgrind: $(SOURCE) s21_calculate.h
+valgrind: $(SOURCE) backend/s21_calculate.h
 ifeq ($(OS), Darwin)
 	$(CC) $(CFLAGS) $(SOURCE) -o s21_test $(CHECK)
 else 
 	$(CC) $(CFLAGS) $(SOURCE) -o s21_test $(CHECK) $(LINUX_FLAGS)
 endif
 	CK_FORK=no valgrind $(VALGRIND_FLAGS) --log-file=RESULT_VALGRIND.txt ./s21_test
-
-clang:
-	cp ../materials/linters/.clang-format .
-	clang-format -n -style=Google *.c *.cpp
-	rm -f .clang-format
 
 clean:
 	rm -f *.out

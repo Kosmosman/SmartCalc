@@ -130,9 +130,8 @@ void MainWindow::input_result() {
   double result = 0;
   double x = 0;
   if (ui->pushButton_x->isChecked()) x = ui->lineEdit_value->text().toDouble();
-  char *str = new char(ui->label->text().length());
-  QByteArray tmp = ui->label->text().toLatin1();
-  strlcpy(str, tmp, ui->label->text().length() + 1);
+  QByteArray ba = ui->label->text().toLocal8Bit();
+  char *str = ba.data();
   int res = s21_parcing_string(&head, &num, str, &result, x);
   if (res == ERROR) {
     ui->label->setText("Error!");
@@ -188,12 +187,12 @@ void MainWindow::create_graphic() {
   if (error != ERROR) {
     grap->paint_grap(x, y, x_start, y_start, x_end, y_end);
     grap->show();
-    delete (str);
     ui->label->clear();
   } else {
     delete (grap);
     ui->label->setText("Error!");
   }
+  delete (str);
 }
 
 void MainWindow::on_pushButton_credit_calculate_clicked() {

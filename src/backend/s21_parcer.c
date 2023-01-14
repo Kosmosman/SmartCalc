@@ -1,3 +1,5 @@
+// Copyright joaquind 2023
+
 #include "s21_calculate.h"
 
 /// @brief Функция для считывания входной строки и проведения
@@ -261,7 +263,6 @@ int s21_check_operators(stack** head, stack** num, char* str, int* position,
       priority = s21_prioritization(ops[0], *head);
     }
     if (res >= 0) s21_push(head, ops);
-    if (ops[0] == '^') s21_push(head, "(");
     *flag = 1;
   }
   return res;
